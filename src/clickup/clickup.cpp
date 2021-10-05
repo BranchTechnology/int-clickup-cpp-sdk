@@ -77,8 +77,6 @@ nlohmann::json clickup::GetFolders(const string &id) {
   }
 }
 
-
-
 nlohmann::json clickup::GetTasksByListId(const string &id, GetTasksByListIdOptions paramsGetTasksByListId) {
 
   try {
@@ -135,6 +133,30 @@ nlohmann::json clickup::GetTasksByListId(const string &id, GetTasksByListIdOptio
   }
   catch(std::exception& e) {
     cout << "unknown exception" << endl;
+    throw e;
+  }
+}
+
+nlohmann::json clickup::CreateTaskInList(const string &id, nlohmann::json body) {
+
+  try {
+
+    Response r = Post(Url{baseUrl+"list/" + id + "/task"},
+                     Header{{"authorization", accessToken}, {"Content-Type","application/json"}},
+                     Body{to_string(body)});
+
+
+    if(r.status_code != 200){
+      throw RequestException(r.text, r.status_code);
+    }
+    return nlohmann::json::parse(r.text);
+  }
+  catch(RequestException &e) {
+    e.printError();
+    throw e;
+  }
+  catch(std::exception& e) {
+    cout << "unknown exception:" << e.what()<< endl;
     throw e;
   }
 }
