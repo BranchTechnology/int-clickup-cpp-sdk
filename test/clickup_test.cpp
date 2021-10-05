@@ -70,3 +70,10 @@ TEST_CASE_METHOD(ClickUpFixture, "test adding a task to a list", "[clickup.cpp]"
   auto o = clickup.AddTaskToList("156038738", "1p051y3");
   cout << o << endl;
 }
+
+TEST_CASE_METHOD(ClickUpFixture, "test getting a list of custom fields", "[clickup.cpp]")
+
+{
+  auto o = clickup.GetListCustomFields( "156038738");
+  cout << o << endl;
+}

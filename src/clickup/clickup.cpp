@@ -77,6 +77,27 @@ nlohmann::json clickup::GetFolders(const string &id) {
   }
 }
 
+nlohmann::json clickup::GetListCustomFields(const string &listId) {
+
+  try {
+    Response r = Get(Url{baseUrl+"list/" + listId + "/field"},
+                     Header{{"authorization", accessToken}});
+
+    if(r.status_code != 200){
+      throw RequestException(r.text, r.status_code);
+    }
+    return nlohmann::json::parse(r.text);
+  }
+  catch(RequestException &e) {
+    e.printError();
+    throw e;
+  }
+  catch(std::exception& e) {
+    cout << "unknown exception: " << e.what()<< endl;
+    throw e;
+  }
+}
+
 nlohmann::json clickup::GetTasksByListId(const string &id, GetTasksByListIdOptions paramsGetTasksByListId) {
 
   try {
