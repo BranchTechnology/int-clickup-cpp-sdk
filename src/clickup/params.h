@@ -7,18 +7,18 @@
 
 using namespace std;
 
-struct GetTasksByListIdOptions{
-  bool Archived;
-  int Page;
-  bool IncludeClosed;
+struct GetTasksByListIdOptions
+{
+    bool Archived;
+    int Page;
+    bool IncludeClosed;
 
-  GetTasksByListIdOptions(bool iArchive =false, int iPage =-1, bool iIncludeClosed=false){
-    Archived=iArchive;
-    Page=iPage;
-    IncludeClosed=iIncludeClosed;
-  }
+    GetTasksByListIdOptions(bool iArchive = false, int iPage = -1, bool iIncludeClosed = false)
+    {
+        Archived = iArchive;
+        Page = iPage;
+        IncludeClosed = iIncludeClosed;
+    }
 };
 
-
-
-#endif //CLICKUP_SRC_CLICKUP_PARAMS_H_
+#endif  // CLICKUP_SRC_CLICKUP_PARAMS_H_

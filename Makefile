@@ -22,6 +22,9 @@ run-test: ## this will build a dev version of the shelf container
 down: ## shut down docker-compose
 	docker-compose down
 
+clang-format:
+	find . -name "*.h" -o -name "*.cpp" -o -name "*.cc" -o -name "*.hxx" -o -name "*.cxx" -o -name "*.inl" -o -name "*.c" | xargs clang-format -style=file -i
+
 .PHONY: help
 help:           ## Show this help.
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
