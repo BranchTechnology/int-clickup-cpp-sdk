@@ -77,3 +77,9 @@ TEST_CASE_METHOD(ClickUpFixture, "test getting a list of custom fields", "[click
   auto o = clickup.GetListCustomFields( "156038738");
   cout << o << endl;
 }
+
+TEST_CASE_METHOD(ClickUpFixture, "test getting a task by id", "[clickup.cpp]")
+{
+  auto o = clickup.GetTaskById( "1p051y3");
+  cout << o << endl;
+}
