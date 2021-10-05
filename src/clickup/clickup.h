@@ -21,6 +21,7 @@ class clickup {
   nlohmann::json GetFolders(const std::string &id);
   nlohmann::json GetTasksByListId(const std::string &id, GetTasksByListIdOptions paramsGetTasksByListId=GetTasksByListIdOptions());
   nlohmann::json CreateTaskInList(const std::string &id, nlohmann::json body);
+  nlohmann::json AddTaskToList(const string &listId, const string &taskId);
 };
 
 #endif //CLICKUP_SRC_CLICKUP_CLICKUP_H_

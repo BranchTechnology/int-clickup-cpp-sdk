@@ -49,7 +49,7 @@ nlohmann::json clickup::GetFolderlessList(const string &id) {
     throw e;
   }
   catch(std::exception& e) {
-    cout << "unknown exception" << endl;
+    cout << "unknown exception: " << e.what()<< endl;
     throw e;
   }
 
@@ -72,7 +72,7 @@ nlohmann::json clickup::GetFolders(const string &id) {
     throw e;
   }
   catch(std::exception& e) {
-    cout << "unknown exception" << endl;
+    cout << "unknown exception: " << e.what()<< endl;
     throw e;
   }
 }
@@ -132,7 +132,7 @@ nlohmann::json clickup::GetTasksByListId(const string &id, GetTasksByListIdOptio
     throw e;
   }
   catch(std::exception& e) {
-    cout << "unknown exception" << endl;
+    cout << "unknown exception: " << e.what()<< endl;
     throw e;
   }
 }
@@ -156,7 +156,30 @@ nlohmann::json clickup::CreateTaskInList(const string &id, nlohmann::json body) 
     throw e;
   }
   catch(std::exception& e) {
-    cout << "unknown exception:" << e.what()<< endl;
+    cout << "unknown exception: " << e.what()<< endl;
+    throw e;
+  }
+}
+
+nlohmann::json clickup::AddTaskToList(const string &listId, const string &taskId) {
+
+  try {
+
+    Response r = Post(Url{baseUrl+"list/" + listId + "/task/" + taskId},
+                      Header{{"authorization", accessToken}});
+
+
+    if(r.status_code != 200){
+      throw RequestException(r.text, r.status_code);
+    }
+    return nlohmann::json::parse(r.text);
+  }
+  catch(RequestException &e) {
+    e.printError();
+    throw e;
+  }
+  catch(std::exception& e) {
+    cout << "unknown exception: " << e.what()<< endl;
     throw e;
   }
 }
