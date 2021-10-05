@@ -14,6 +14,7 @@ add_subdirectory(src/clickup)
 target_include_directories(clickup PUBLIC src)
 
 # tests
+add_subdirectory(test)
 if($ENV{TEST_CLICKUP})
     message("Generating tests")
     add_subdirectory(test)

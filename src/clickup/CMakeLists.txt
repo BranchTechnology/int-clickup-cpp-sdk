@@ -10,6 +10,6 @@ target_link_libraries(clickup
         cpr::cpr
         )
 
-target_include_directories(clickup PUBLIC src/clickup)
-
-target_include_directories(clickup PRIVATE "${CMAKE_BINARY_DIR}" "${PROJECT_BINARY_DIR}")
+#target_include_directories(clickup PUBLIC src/clickup)
+#
+#target_include_directories(clickup PRIVATE "${CMAKE_BINARY_DIR}" "${PROJECT_BINARY_DIR}")
