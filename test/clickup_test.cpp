@@ -38,8 +38,14 @@ public:
     ClickUpFixture() : clickup(connect()) {}
 };
 
-TEST_CASE_METHOD(ClickUpFixture, "Test_creating a bucket", "[clickup.cpp]")
+TEST_CASE_METHOD(ClickUpFixture, "test getting a folderless list", "[clickup.cpp]")
 {
     auto j = clickup.GetFolderlessList("54005663");
     cout << j << endl;
+}
+
+TEST_CASE_METHOD(ClickUpFixture, "test getting folders", "[clickup.cpp]")
+{
+  auto j = clickup.GetFolders("54005663");
+  cout << j << endl;
 }

@@ -17,6 +17,7 @@ class clickup {
   explicit clickup(const std::string &region);
 
   nlohmann::json GetFolderlessList(const std::string &id);
+  nlohmann::json GetFolders(const std::string &id);
 };
 
 #endif //CLICKUP_SRC_CLICKUP_CLICKUP_H_
