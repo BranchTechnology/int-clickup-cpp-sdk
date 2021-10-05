@@ -7,6 +7,7 @@
 
 #include <nlohmann/json.hpp>
 #include <string>
+#include "params.h"
 
 class clickup {
  private:
@@ -18,6 +19,8 @@ class clickup {
 
   nlohmann::json GetFolderlessList(const std::string &id);
   nlohmann::json GetFolders(const std::string &id);
+  nlohmann::json GetTasksByListId(const std::string &id, GetTasksByListIdOptions paramsGetTasksByListId=GetTasksByListIdOptions());
+  nlohmann::json CreateTaskInList(const std::string &id, nlohmann::json body);
 };
 
 #endif //CLICKUP_SRC_CLICKUP_CLICKUP_H_

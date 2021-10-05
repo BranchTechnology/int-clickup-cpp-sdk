@@ -77,3 +77,64 @@ nlohmann::json clickup::GetFolders(const string &id) {
   }
 }
 
+
+
+nlohmann::json clickup::GetTasksByListId(const string &id, GetTasksByListIdOptions paramsGetTasksByListId) {
+
+  try {
+
+    string requestResource = "list/{paramsGetTasksByListId.ListId}/task";
+    bool addedParams = false;
+    if (paramsGetTasksByListId.Archived)
+    {
+      if (!addedParams)
+      {
+        requestResource += "?";
+        addedParams = true;
+      }
+      requestResource += "archived={paramsGetTasksByListId.Archived}";
+    }
+    if (paramsGetTasksByListId.Page > 0)
+    {
+      if (!addedParams)
+      {
+        requestResource += "?";
+        addedParams = true;
+      }
+      else
+      {
+        requestResource += "&";
+      }
+      requestResource += "page={paramsGetTasksByListId.Page}";
+    }
+    if (paramsGetTasksByListId.IncludeClosed)
+    {
+      if (!addedParams)
+      {
+        requestResource += "?";
+        addedParams = true;
+      }
+      else
+      {
+        requestResource += "&";
+      }
+      requestResource += "include_closed={paramsGetTasksByListId.IncludeClosed}";
+    }
+
+    Response r = Get(Url{baseUrl+"space/" + id + "/folder"},
+                     Header{{"authorization", accessToken}});
+
+    if(r.status_code != 200){
+      throw RequestException(r.text, r.status_code);
+    }
+    return nlohmann::json::parse(r.text);
+  }
+  catch(RequestException &e) {
+    e.printError();
+    throw e;
+  }
+  catch(std::exception& e) {
+    cout << "unknown exception" << endl;
+    throw e;
+  }
+}

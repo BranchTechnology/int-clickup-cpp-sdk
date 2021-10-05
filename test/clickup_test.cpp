@@ -49,3 +49,10 @@ TEST_CASE_METHOD(ClickUpFixture, "test getting folders", "[clickup.cpp]")
   auto j = clickup.GetFolders("54005663");
   cout << j << endl;
 }
+
+TEST_CASE_METHOD(ClickUpFixture, "test getting tasks", "[clickup.cpp]")
+
+{
+  auto  = clickup.GetTasksByListId("54005663", GetTasksByListIdOptions());
+  cout << j << endl;
+}
