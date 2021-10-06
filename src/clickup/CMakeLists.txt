@@ -5,6 +5,8 @@ add_library(clickup STATIC
         clickup.h
         )
 
+add_library(clickup::clickup ALIAS clickup)
+
 target_link_libraries(clickup
         nlohmann_json::nlohmann_json
         cpr::cpr
