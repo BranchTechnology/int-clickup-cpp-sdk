@@ -14,7 +14,6 @@ FetchContent_MakeAvailable(json)
 
 set(CPR_BUILD_TESTS OFF)
 set(CPR_BUILD_TESTS_SSL OFF)
-include(FetchContent)
 FetchContent_Declare(cpr GIT_REPOSITORY
         https://github.com/libcpr/cpr.git
         GIT_TAG 1.6.2) # the commit hash for 1.6.2

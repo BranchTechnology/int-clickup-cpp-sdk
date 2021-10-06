@@ -1,108 +1,80 @@
-#include <aws/s3/model/PutObjectRequest.h>
-#include <clickupS3/clickupS3.h>
-#include <config_clickup.h>
-
+#ifdef _WIN32
+#define _HAS_STD_BYTE 0
+#endif
+#include <clickup/clickup.h>
 #include <catch2/catch.hpp>
-#include <fstream>
 #include <iostream>
 #include <map>
 
-class S3Fixture
+using namespace std;
+
+static inline std::string GetEnvVal(const std::string &var, std::string def)
+{
+    auto val = std::getenv(var.c_str());
+    //        cout << val << endl;
+    if (val == nullptr) {
+        return def;
+    } else {
+        return std::string(val);
+    }
+}
+
+class ClickUpFixture
 {
 private:
-    inline std::string GetEnvVal(const std::string &var, std::string def)
-    {
-        auto val = std::getenv(var.c_str());
-        if (val == nullptr) {
-            return def;
-        } else {
-            return val;
-        }
-    }
-
 public:
-    clickupS3 clickup;
-    std::string bucket = "cambia-project-test2";
-    std::string objectName = "test/test3/input.stp";
+    clickup clickup;
 
-    clickupS3 connect()
-    {
-        std::string host = GetEnvVal("S3HOST", "127.0.0.1:4566");
-        return clickupS3("us-east-1", host);
-    }
-    S3Fixture() : clickup(connect()) {}
+    static std::string connect() { return GetEnvVal("ACCESS_TOKEN", "null"); }
+    ClickUpFixture() : clickup(connect()) {}
 };
 
-TEST_CASE_METHOD(S3Fixture, "Test_creating a bucket", "[clickup.cpp]")
+TEST_CASE_METHOD(ClickUpFixture, "test getting a folderless list", "[clickup.cpp]")
 {
-    REQUIRE_NOTHROW(clickup.CreateBucket(bucket));
-
-    // local stack improperly mocks the list bucket implementation of s3...
-    // auto buckets = clickup.ListBuckets();
-    // bool valid = false;
-    // for (const auto& i: buckets){
-    //     std::cout << "found bucket" << i.GetName() <<std::endl;
-    //     if(i.GetName() == bucket.c_str()) {
-    //         valid = true;
-
-    //     }
-    // }
-    // REQUIRE(valid);
+    auto o = clickup.GetFolderlessList("54005663");
+    cout << o << endl;
 }
 
-TEST_CASE_METHOD(S3Fixture, "Test creating a signed url for download", "[clickup.cpp]")
+TEST_CASE_METHOD(ClickUpFixture, "test getting folders", "[clickup.cpp]")
 {
-    auto t = clickup.CreatePresignedUrl(bucket, "test/test/input.stp");
-    REQUIRE(t.length() > 0);
-    std::cout << t << std::endl;
+    auto o = clickup.GetFolders("54005663");
+    cout << o << endl;
 }
 
-TEST_CASE_METHOD(S3Fixture, "Test_putting_a_file_in_s3", "[clickup.cpp]")
+TEST_CASE_METHOD(ClickUpFixture, "test getting tasks", "[clickup.cpp]")
+
 {
-    const std::string dir = SOURCE_DIR;
-    const std::string fileName = dir + "/test/test_data/aaa.stp";
-    // push the object
-    REQUIRE_NOTHROW(clickup.PutFile(bucket, objectName, fileName));
+    auto o = clickup.GetTasksByListId("54005663", GetTasksByListIdOptions());
+    cout << o << endl;
 }
 
-TEST_CASE_METHOD(S3Fixture, "Test putting a bunch of files in s3", "[clickup.cpp]")
+TEST_CASE_METHOD(ClickUpFixture, "test creating a task in list", "[clickup.cpp]")
 {
-    const std::string dir = SOURCE_DIR;
-    const std::string fileName = dir + "/test/test_data/aaa.stp";
+    auto t = R"({
+    "name": "sdf"
+  })";
+    auto j = nlohmann::json::parse(t);
 
-    std::map<std::string, std::string> files{
-            {"test/test/0",fileName},
-            {"test/test/1",fileName},
-            {"test/test/2",fileName}
-    };
-    // push the object
-    REQUIRE_NOTHROW(clickup.PutObjectsAsync(bucket, files));
+    auto o = clickup.CreateTaskInList("54005663", j);
+    cout << o << endl;
 }
 
-TEST_CASE_METHOD(S3Fixture, "Test_getting_a_file_from_s3", "[clickup.cpp]")
+TEST_CASE_METHOD(ClickUpFixture, "test adding a task to a list", "[clickup.cpp]")
+
 {
-    REQUIRE_NOTHROW(clickup.GetObject(bucket, objectName));
+    auto o = clickup.AddTaskToList("156038738", "1p051y3");
+    cout << o << endl;
 }
 
-TEST_CASE_METHOD(S3Fixture, "Test_downloading_a_file_from_s3", "[clickup.cpp]")
+TEST_CASE_METHOD(ClickUpFixture, "test getting a list of custom fields", "[clickup.cpp]")
+
 {
-    REQUIRE_NOTHROW(clickup.DownloadFile(bucket, objectName, "./test.scs"));
+    auto o = clickup.GetListCustomFields("156038738");
+    cout << o << endl;
 }
 
-TEST_CASE_METHOD(S3Fixture, "Test_putting_a_buffer_in_s3", "[clickup.cpp]")
+TEST_CASE_METHOD(ClickUpFixture, "test getting a task by id", "[clickup.cpp]")
 {
-    std::string dir = SOURCE_DIR;
-    std::string file = dir + "/test/test_data/aaa.stp";
-
-    std::shared_ptr<Aws::IOStream> input_data =
-        Aws::MakeShared<Aws::FStream>("SampleAllocationTag", file.c_str(), std::ios_base::in | std::ios_base::binary);
-
-    REQUIRE_NOTHROW(clickup.PutObject(bucket, objectName, input_data));
-    REQUIRE_NOTHROW(clickup.GetObject(bucket, objectName));
+    auto o = clickup.GetTaskById("1p051y3");
+    cout << o << endl;
 }
-
-// TEST_CASE_METHOD(S3Fixture, "Test_listing_buckets_s3", "[clickup.cpp]")
-// {
-// local stack sucks
-//     REQUIRE_NOTHROW(clickup.ListBuckets());
-// }

@@ -34,3 +34,4 @@
 #Build folders
 /cmake-build-debug
 /build
+.envrc

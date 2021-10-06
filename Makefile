@@ -13,14 +13,8 @@ run-test: ## runs the test exe inside of the container
 run-bash: ## this will bash into the container after compilation to allow debugging
 	docker run -it --network="host" --entrypoint bash clickup:base
 
-run-test-env:
-	docker-compose up -d localstack
-
-run-test: ## this will build a dev version of the shelf container
-	docker-compose run test_env
-
-down: ## shut down docker-compose
-	docker-compose down
+clang-format:
+	find . -name "*.h" -o -name "*.cpp" -o -name "*.cc" -o -name "*.hxx" -o -name "*.cxx" -o -name "*.inl" -o -name "*.c" | xargs clang-format -style=file -i
 
 .PHONY: help
 help:           ## Show this help.
