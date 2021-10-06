@@ -31,7 +31,12 @@
 *.out
 *.app
 
+#IDE
+**/idea
+
 #Build folders
-/cmake-build-debug
-/build
+**/cmake-build-debug
+*/build
 .envrc
+
+.idea/
