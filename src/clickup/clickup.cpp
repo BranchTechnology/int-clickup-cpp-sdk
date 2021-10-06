@@ -29,6 +29,21 @@ clickup::clickup(const std::string &userToken)
 {
     accessToken = userToken;
 }
+
+void clickup::getToken(const std::string &userToken)
+{
+  try {
+    auto val = std::getenv(userToken.c_str());
+    if (val == nullptr) {
+      throw logic_error("failed to get ACCESS_TOKEN from env");
+    } else {
+      accessToken = string(val);
+    }
+  } catch (std::exception &e) {
+    cout << "unknown exception: " << e.what() << endl;
+    throw e;
+  }
+}
 nlohmann::json clickup::GetFolderlessList(const string &id)
 {
     try {

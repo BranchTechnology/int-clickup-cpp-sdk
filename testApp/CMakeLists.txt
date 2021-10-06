@@ -11,7 +11,7 @@ include(FetchContent)
 
 FetchContent_Declare(clickup
         GIT_REPOSITORY git@github.com:BranchTechnology/clickup-cpp-sdk.git
-        GIT_TAG v0.0.1)
+        GIT_TAG v0.0.2)
 
 target_link_libraries(clickupExample
         clickup
