@@ -9,6 +9,16 @@ add_subdirectory(thirdparty)
 add_subdirectory(src/clickup)
 target_include_directories(clickup PUBLIC src)
 
+if($ENV{TEST_APP_CLICKUP})
+    message("Generating test app")
+    add_subdirectory(testApp)
+elseif(${TEST_APP_CLICKUP})
+    message("Generating test app")
+    add_subdirectory(testApp)
+else()
+    message("Building without tests")
+endif()
+
 # tests
 if($ENV{TEST_CLICKUP})
     message("Generating tests")

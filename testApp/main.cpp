@@ -6,9 +6,10 @@
 
 using namespace std;
 
-int main() {
-  clickup client = clickup();
-  client.getToken();
-  auto o = client.GetFolderlessList("54005663");
-  cout << o << endl;
+int main()
+{
+    clickup client;
+    client.getToken();
+    auto o = client.GetFolderlessList("54005663");
+    cout << o << endl;
 }
