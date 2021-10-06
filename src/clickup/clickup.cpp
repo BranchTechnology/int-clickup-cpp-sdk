@@ -29,7 +29,7 @@ clickup::clickup(const std::string &userToken)
 {
     accessToken = userToken;
 }
-nlohmann::json clickup::GetFolderlessList(const string &id)
+void clickup::GetFolderlessList(const string &id)
 {
     try {
         Response r = Get(Url{baseUrl + "space/" + id + "/list"}, Header{{"authorization", accessToken}});
@@ -37,7 +37,7 @@ nlohmann::json clickup::GetFolderlessList(const string &id)
         if (r.status_code != 200) {
             throw RequestException(r.error.message, r.status_code);
         }
-        return nlohmann::json::parse(r.text);
+//        return void::parse(r.text);
     } catch (RequestException &e) {
         e.printError();
         throw e;
@@ -47,7 +47,7 @@ nlohmann::json clickup::GetFolderlessList(const string &id)
     }
 }
 
-nlohmann::json clickup::GetFolders(const string &id)
+void clickup::GetFolders(const string &id)
 {
     try {
         Response r = Get(Url{baseUrl + "space/" + id + "/folder"}, Header{{"authorization", accessToken}});
@@ -55,7 +55,7 @@ nlohmann::json clickup::GetFolders(const string &id)
         if (r.status_code != 200) {
             throw RequestException(r.text, r.status_code);
         }
-        return nlohmann::json::parse(r.text);
+//        return void::parse(r.text);
     } catch (RequestException &e) {
         e.printError();
         throw e;
@@ -65,7 +65,7 @@ nlohmann::json clickup::GetFolders(const string &id)
     }
 }
 
-nlohmann::json clickup::GetListCustomFields(const string &listId)
+void clickup::GetListCustomFields(const string &listId)
 {
     try {
         Response r = Get(Url{baseUrl + "list/" + listId + "/field"}, Header{{"authorization", accessToken}});
@@ -73,7 +73,7 @@ nlohmann::json clickup::GetListCustomFields(const string &listId)
         if (r.status_code != 200) {
             throw RequestException(r.text, r.status_code);
         }
-        return nlohmann::json::parse(r.text);
+//        return void::parse(r.text);
     } catch (RequestException &e) {
         e.printError();
         throw e;
@@ -83,7 +83,7 @@ nlohmann::json clickup::GetListCustomFields(const string &listId)
     }
 }
 
-nlohmann::json clickup::GetTaskById(const string &taskId)
+void clickup::GetTaskById(const string &taskId)
 {
     try {
         Response r = Get(Url{baseUrl + "task/" + taskId}, Header{{"authorization", accessToken}});
@@ -91,7 +91,7 @@ nlohmann::json clickup::GetTaskById(const string &taskId)
         if (r.status_code != 200) {
             throw RequestException(r.text, r.status_code);
         }
-        return nlohmann::json::parse(r.text);
+//        return void::parse(r.text);
     } catch (RequestException &e) {
         e.printError();
         throw e;
@@ -101,7 +101,7 @@ nlohmann::json clickup::GetTaskById(const string &taskId)
     }
 }
 
-nlohmann::json clickup::GetTasksByListId(const string &id, GetTasksByListIdOptions paramsGetTasksByListId)
+void clickup::GetTasksByListId(const string &id, GetTasksByListIdOptions paramsGetTasksByListId)
 {
     try {
         string requestResource = "list/{paramsGetTasksByListId.ListId}/task";
@@ -137,7 +137,7 @@ nlohmann::json clickup::GetTasksByListId(const string &id, GetTasksByListIdOptio
         if (r.status_code != 200) {
             throw RequestException(r.text, r.status_code);
         }
-        return nlohmann::json::parse(r.text);
+//        return void::parse(r.text);
     } catch (RequestException &e) {
         e.printError();
         throw e;
@@ -147,27 +147,27 @@ nlohmann::json clickup::GetTasksByListId(const string &id, GetTasksByListIdOptio
     }
 }
 
-nlohmann::json clickup::CreateTaskInList(const string &id, nlohmann::json body)
-{
-    try {
-        Response r =
-            Post(Url{baseUrl + "list/" + id + "/task"},
-                 Header{{"authorization", accessToken}, {"Content-Type", "application/json"}}, Body{to_string(body)});
+//void clickup::CreateTaskInList(const string &id, void body)
+//{
+//    try {
+//        Response r =
+//            Post(Url{baseUrl + "list/" + id + "/task"},
+//                 Header{{"authorization", accessToken}, {"Content-Type", "application/json"}}, Body{to_string(body)});
+//
+//        if (r.status_code != 200) {
+//            throw RequestException(r.text, r.status_code);
+//        }
+//        return void::parse(r.text);
+//    } catch (RequestException &e) {
+//        e.printError();
+//        throw e;
+//    } catch (std::exception &e) {
+//        cout << "unknown exception: " << e.what() << endl;
+//        throw e;
+//    }
+//}
 
-        if (r.status_code != 200) {
-            throw RequestException(r.text, r.status_code);
-        }
-        return nlohmann::json::parse(r.text);
-    } catch (RequestException &e) {
-        e.printError();
-        throw e;
-    } catch (std::exception &e) {
-        cout << "unknown exception: " << e.what() << endl;
-        throw e;
-    }
-}
-
-nlohmann::json clickup::AddTaskToList(const string &listId, const string &taskId)
+void clickup::AddTaskToList(const string &listId, const string &taskId)
 {
     try {
         Response r = Post(Url{baseUrl + "list/" + listId + "/task/" + taskId}, Header{{"authorization", accessToken}});
@@ -175,7 +175,7 @@ nlohmann::json clickup::AddTaskToList(const string &listId, const string &taskId
         if (r.status_code != 200) {
             throw RequestException(r.text, r.status_code);
         }
-        return nlohmann::json::parse(r.text);
+//        return void::parse(r.text);
     } catch (RequestException &e) {
         e.printError();
         throw e;

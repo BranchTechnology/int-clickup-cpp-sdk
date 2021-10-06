@@ -5,7 +5,7 @@
 #ifndef CLICKUP_SRC_CLICKUP_CLICKUP_H_
 #define CLICKUP_SRC_CLICKUP_CLICKUP_H_
 
-#include <nlohmann/json.hpp>
+//#include <nlohmann/json.hpp>
 #include <string>
 #include "params.h"
 
@@ -18,14 +18,14 @@ public:
 
     explicit clickup(const std::string &region);
 
-    nlohmann::json GetFolderlessList(const std::string &id);
-    nlohmann::json GetFolders(const std::string &id);
-    nlohmann::json GetTasksByListId(const std::string &id,
+    void GetFolderlessList(const std::string &id);
+    void GetFolders(const std::string &id);
+    void GetTasksByListId(const std::string &id,
                                     GetTasksByListIdOptions paramsGetTasksByListId = GetTasksByListIdOptions());
-    nlohmann::json CreateTaskInList(const std::string &id, nlohmann::json body);
-    nlohmann::json AddTaskToList(const string &listId, const string &taskId);
-    nlohmann::json GetListCustomFields(const string &listId);
-    nlohmann::json GetTaskById(const string &taskId);
+//    void CreateTaskInList(const std::string &id, void body);
+    void AddTaskToList(const string &listId, const string &taskId);
+    void GetListCustomFields(const string &listId);
+    void GetTaskById(const string &taskId);
 };
 
 #endif  // CLICKUP_SRC_CLICKUP_CLICKUP_H_

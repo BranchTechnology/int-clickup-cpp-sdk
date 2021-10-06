@@ -20,7 +20,7 @@ target_include_directories(clickup_test
 target_link_libraries(clickup_test
         Catch2::Catch2
         clickup
-        nlohmann_json::nlohmann_json
+#        nlohmann_json::nlohmann_json
         cpr::cpr
         )
 

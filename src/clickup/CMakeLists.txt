@@ -6,7 +6,7 @@ add_library(clickup STATIC
         )
 
 target_link_libraries(clickup
-        nlohmann_json::nlohmann_json
+#        nlohmann_json::nlohmann_json
         cpr::cpr
         )
 
