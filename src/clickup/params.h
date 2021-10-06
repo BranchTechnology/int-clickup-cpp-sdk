@@ -13,7 +13,7 @@ struct GetTasksByListIdOptions
     int Page;
     bool IncludeClosed;
 
-    GetTasksByListIdOptions(bool iArchive = false, int iPage = -1, bool iIncludeClosed = false)
+    explicit GetTasksByListIdOptions(bool iArchive = false, int iPage = -1, bool iIncludeClosed = false)
     {
         Archived = iArchive;
         Page = iPage;

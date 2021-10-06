@@ -1,0 +1,8 @@
+//
+// Created by Jacques Perrault on 10/6/21.
+//
+
+#ifndef CLICKUP_SRC_CLICKUP_RESPONSES_H_
+#define CLICKUP_SRC_CLICKUP_RESPONSES_H_
+
+#endif //CLICKUP_SRC_CLICKUP_RESPONSES_H_

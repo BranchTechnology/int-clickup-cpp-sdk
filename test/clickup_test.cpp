@@ -1,15 +1,10 @@
 #ifdef _WIN32
-    #define _HAS_STD_BYTE 0
+#define _HAS_STD_BYTE 0
 #endif
 #include <clickup/clickup.h>
-#include <config_clickup.h>
-
 #include <catch2/catch.hpp>
-#include <fstream>
 #include <iostream>
 #include <map>
-#include <string>
-#include <cpr/api.h>
 
 using namespace std;
 
