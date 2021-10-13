@@ -15,9 +15,9 @@ private:
 public:
     std::string accessToken;
     std::string baseUrl = "https://api.clickup.com/api/v2/";
-
-    explicit clickup(const std::string &region);
-
+    clickup();
+    explicit clickup(const std::string &userToken);
+    void getToken(const std::string &userToken = "ACCESS_TOKEN");
     nlohmann::json GetFolderlessList(const std::string &id);
     nlohmann::json GetFolders(const std::string &id);
     nlohmann::json GetTasksByListId(const std::string &id,
