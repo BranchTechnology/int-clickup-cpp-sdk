@@ -143,14 +143,13 @@ nlohmann::json clickup::GetTasksByListId(const string &id, GetTasksByListIdOptio
         if (paramsGetTasksByListId.IncludeClosed) {
             if (!addedParams) {
                 requestResource += "?";
-                addedParams = true;
             } else {
                 requestResource += "&";
             }
             requestResource += "include_closed={paramsGetTasksByListId.IncludeClosed}";
         }
 
-        Response r = Get(Url{baseUrl + "space/" + id + "/folder"}, Header{{"authorization", accessToken}});
+        Response r = Get(Url{baseUrl + requestResource}, Header{{"authorization", accessToken}});
 
         if (r.status_code != 200) {
             throw RequestException(r.text, r.status_code);
