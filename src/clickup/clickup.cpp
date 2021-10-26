@@ -8,6 +8,7 @@
 #include <future>
 //#include <experiemental/future>
 #include <exception>
+#include <utility>
 
 using namespace std;
 using namespace cpr;
@@ -16,7 +17,7 @@ struct RequestException : public exception {
   string message;
   int code;
   RequestException(string iMessage, int iCode = 400) {
-    message = iMessage;
+    message = std::move(iMessage);
     code = iCode;
   }
   [[nodiscard]] const char *what() const noexcept { return message.c_str(); }
@@ -44,14 +45,19 @@ void clickup::getToken(const std::string &userToken) {
   }
 }
 
+nlohmann::json parseResponse(const Response& f) {
+  if (f.status_code != 200) {
+    throw RequestException(f.error.message, f.status_code);
+  }
+  return nlohmann::json::parse(f.text);
+}
+
+
 nlohmann::json clickup::GetFolderlessList(const string &id) {
   try {
     Response r = Get(Url{baseUrl + "space/" + id + "/list"}, Header{{"authorization", accessToken}});
 
-    if (r.status_code != 200) {
-      throw RequestException(r.error.message, r.status_code);
-    }
-    return nlohmann::json::parse(r.text);
+    return parseResponse(r);
   } catch (RequestException &e) {
     e.printError();
     throw e;
@@ -60,6 +66,7 @@ nlohmann::json clickup::GetFolderlessList(const string &id) {
     throw e;
   }
 }
+
 
 future<nlohmann::json> clickup::AsyncGetFolderlessList(const string &id) {
   try {
@@ -78,11 +85,7 @@ future<nlohmann::json> clickup::AsyncGetFolderlessList(const string &id) {
 nlohmann::json clickup::GetFolders(const string &id) {
   try {
     Response r = Get(Url{baseUrl + "space/" + id + "/folder"}, Header{{"authorization", accessToken}});
-
-    if (r.status_code != 200) {
-      throw RequestException(r.text, r.status_code);
-    }
-    return nlohmann::json::parse(r.text);
+    return parseResponse(r);
   } catch (RequestException &e) {
     e.printError();
     throw e;
@@ -95,11 +98,8 @@ nlohmann::json clickup::GetFolders(const string &id) {
 nlohmann::json clickup::GetListCustomFields(const string &listId) {
   try {
     Response r = Get(Url{baseUrl + "list/" + listId + "/field"}, Header{{"authorization", accessToken}});
+    return parseResponse(r);
 
-    if (r.status_code != 200) {
-      throw RequestException(r.text, r.status_code);
-    }
-    return nlohmann::json::parse(r.text);
   } catch (RequestException &e) {
     e.printError();
     throw e;
@@ -112,11 +112,7 @@ nlohmann::json clickup::GetListCustomFields(const string &listId) {
 nlohmann::json clickup::GetTaskById(const string &taskId) {
   try {
     Response r = Get(Url{baseUrl + "task/" + taskId}, Header{{"authorization", accessToken}});
-
-    if (r.status_code != 200) {
-      throw RequestException(r.text, r.status_code);
-    }
-    return nlohmann::json::parse(r.text);
+    return parseResponse(r);
   } catch (RequestException &e) {
     e.printError();
     throw e;
@@ -156,11 +152,7 @@ nlohmann::json clickup::GetTasksByListId(const string &id, GetTasksByListIdOptio
     }
 
     Response r = Get(Url{baseUrl + requestResource}, Header{{"authorization", accessToken}});
-
-    if (r.status_code != 200) {
-      throw RequestException(r.text, r.status_code);
-    }
-    return nlohmann::json::parse(r.text);
+    return parseResponse(r);
   } catch (RequestException &e) {
     e.printError();
     throw e;
@@ -175,11 +167,7 @@ nlohmann::json clickup::CreateTaskInList(const string &id, nlohmann::json body) 
     Response r =
         Post(Url{baseUrl + "list/" + id + "/task"},
              Header{{"authorization", accessToken}, {"Content-Type", "application/json"}}, Body{to_string(body)});
-
-    if (r.status_code != 200) {
-      throw RequestException(r.text, r.status_code);
-    }
-    return nlohmann::json::parse(r.text);
+    return parseResponse(r);
   } catch (RequestException &e) {
     e.printError();
     throw e;
@@ -192,11 +180,7 @@ nlohmann::json clickup::CreateTaskInList(const string &id, nlohmann::json body) 
 nlohmann::json clickup::AddTaskToList(const string &listId, const string &taskId) {
   try {
     Response r = Post(Url{baseUrl + "list/" + listId + "/task/" + taskId}, Header{{"authorization", accessToken}});
-
-    if (r.status_code != 200) {
-      throw RequestException(r.text, r.status_code);
-    }
-    return nlohmann::json::parse(r.text);
+    return parseResponse(r);
   } catch (RequestException &e) {
     e.printError();
     throw e;
