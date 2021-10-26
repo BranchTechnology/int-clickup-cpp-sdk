@@ -14,7 +14,7 @@ run-bash: ## this will bash into the container after compilation to allow debugg
 	docker run -it --network="host" --entrypoint bash clickup:base
 
 clang-format:
-	find . -name "*.h" -o -name "*.cpp" -o -name "*.cc" -o -name "*.hxx" -o -name "*.cxx" -o -name "*.inl" -o -name "*.c" | xargs clang-format -style=file -i
+	find . -name "*.h" -o -name "*.cpp" | xargs clang-format -style=file -i
 
 .PHONY: help
 help:           ## Show this help.
