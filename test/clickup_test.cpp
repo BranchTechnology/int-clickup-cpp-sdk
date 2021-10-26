@@ -33,7 +33,7 @@ public:
 TEST_CASE_METHOD(ClickUpFixture, "test getting a folderless list", "[clickup.cpp]")
 {
     auto o = clickup.GetFolderlessList("54005663");
-    cout << o << endl;
+    REQUIRE(o["respUrl"] == "https://api.clickup.com/api/v2/space/54005663/list");
 }
 
 TEST_CASE_METHOD(ClickUpFixture, "async test getting a folderless list", "[clickup.cpp]")
@@ -41,31 +41,58 @@ TEST_CASE_METHOD(ClickUpFixture, "async test getting a folderless list", "[click
   auto o = std::async( [&]() {
     return clickup.GetFolderlessList("54005663");
   });
-  cout << o.get() << endl;
+  REQUIRE(o.get()["respUrl"] == "https://api.clickup.com/api/v2/space/54005663/list");
 }
 
 TEST_CASE_METHOD(ClickUpFixture, "test getting folders", "[clickup.cpp]")
 {
     auto o = clickup.GetFolders("54005663");
-    cout << o << endl;
+    REQUIRE(o["respUrl"] == "https://api.clickup.com/api/v2/space/54005663/folder");
 }
 
-TEST_CASE_METHOD(ClickUpFixture, "test getting tasks", "[clickup.cpp]")
 
+TEST_CASE_METHOD(ClickUpFixture, "test getting tasks with options", "[clickup.cpp]")
 {
-    auto o = clickup.GetTasksByListId("54005663", GetTasksByListIdOptions());
+  SECTION("test no options", "[clickup.cpp]" )
+  {
+    auto o = clickup.GetTasksByListId("156038738", GetTasksByListIdOptions());
+    REQUIRE(o["respUrl"] == "https://api.clickup.com/api/v2/list/156038738/task");
+  }
+  SECTION("test archive boolean", "[clickup.cpp]" )
+  {
+    auto o = clickup.GetTasksByListId("156038738", GetTasksByListIdOptions(true));
+    REQUIRE(o["respUrl"] == "https://api.clickup.com/api/v2/list/156038738/task?archived=true");
+  }
+
+  SECTION("test page number", "[clickup.cpp]" )
+  {
+    auto o = clickup.GetTasksByListId("156038738", GetTasksByListIdOptions(false, 2));
+    REQUIRE(o["respUrl"] == "https://api.clickup.com/api/v2/list/156038738/task?page=2");
+  }
+  SECTION("test closed boolean", "[clickup.cpp]" )
+  {
+    auto o = clickup.GetTasksByListId("156038738", GetTasksByListIdOptions(false, -1, true));
     cout << o << endl;
+    REQUIRE(o["respUrl"] == "https://api.clickup.com/api/v2/list/156038738/task?include_closed=true");
+  }
+  SECTION("test all options", "[clickup.cpp]" )
+  {
+    auto o = clickup.GetTasksByListId("156038738", GetTasksByListIdOptions(true, 2, true));
+    cout << o << endl;
+    REQUIRE(o["respUrl"] == "https://api.clickup.com/api/v2/list/156038738/task?archived=true&page=2&include_closed=true");
+  }
 }
 
 TEST_CASE_METHOD(ClickUpFixture, "test creating a task in list", "[clickup.cpp]")
 {
     auto t = R"({
-    "name": "sdf"
+    "name": "ljlklk"
   })";
     auto j = nlohmann::json::parse(t);
 
-    auto o = clickup.CreateTaskInList("54005663", j);
+    auto o = clickup.CreateTaskInList("156038738", j);
     cout << o << endl;
+    REQUIRE(o["respUrl"] == "https://api.clickup.com/api/v2/list/156038738/task");
 }
 
 TEST_CASE_METHOD(ClickUpFixture, "test adding a task to a list", "[clickup.cpp]")
@@ -73,6 +100,8 @@ TEST_CASE_METHOD(ClickUpFixture, "test adding a task to a list", "[clickup.cpp]"
 {
     auto o = clickup.AddTaskToList("156038738", "1p051y3");
     cout << o << endl;
+
+    REQUIRE(o["respUrl"] == "https://api.clickup.com/api/v2/list/156038738/task/1p051y3");
 }
 
 TEST_CASE_METHOD(ClickUpFixture, "test getting a list of custom fields", "[clickup.cpp]")
@@ -80,10 +109,11 @@ TEST_CASE_METHOD(ClickUpFixture, "test getting a list of custom fields", "[click
 {
     auto o = clickup.GetListCustomFields("156038738");
     cout << o << endl;
+    REQUIRE(o["respUrl"] == "https://api.clickup.com/api/v2/list/156038738/field");
 }
 
 TEST_CASE_METHOD(ClickUpFixture, "test getting a task by id", "[clickup.cpp]")
 {
     auto o = clickup.GetTaskById("1p051y3");
-    cout << o << endl;
+  REQUIRE(o["respUrl"] == "https://api.clickup.com/api/v2/task/1p051y3");
 }

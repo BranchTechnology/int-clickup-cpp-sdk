@@ -172,9 +172,7 @@ nlohmann::json clickup::GetTasksByListId(const string &id, GetTasksByListIdOptio
 nlohmann::json clickup::CreateTaskInList(const string &id, nlohmann::json body) {
   try {
     auto url = baseUrl + "list/" + id + "/task";
-    Response r =
-        Post(Url{},
-             Header{{"authorization", accessToken}, {"Content-Type", "application/json"}}, Body{to_string(body)});
+    Response r = Post(Url{url},Header{{"authorization", accessToken}, {"Content-Type", "application/json"}}, Body{to_string(body)});
     return parseResponse(r, url);
   } catch (RequestException &e) {
     e.printError();
