@@ -45,19 +45,21 @@ void clickup::getToken(const std::string &userToken) {
   }
 }
 
-nlohmann::json parseResponse(const Response& f) {
+nlohmann::json parseResponse(const Response& f,  const  string& url) {
   if (f.status_code != 200) {
     throw RequestException(f.error.message, f.status_code);
   }
-  return nlohmann::json::parse(f.text);
+  auto resp = nlohmann::json::parse(f.text);
+  resp["respUrl"] = url;
+  return resp;
 }
 
 
 nlohmann::json clickup::GetFolderlessList(const string &id) {
   try {
-    Response r = Get(Url{baseUrl + "space/" + id + "/list"}, Header{{"authorization", accessToken}});
-
-    return parseResponse(r);
+    auto url = baseUrl + "space/" + id + "/list";
+    Response r = Get(Url{url}, Header{{"authorization", accessToken}});
+    return parseResponse(r, url);
   } catch (RequestException &e) {
     e.printError();
     throw e;
@@ -84,8 +86,9 @@ future<nlohmann::json> clickup::AsyncGetFolderlessList(const string &id) {
 }
 nlohmann::json clickup::GetFolders(const string &id) {
   try {
-    Response r = Get(Url{baseUrl + "space/" + id + "/folder"}, Header{{"authorization", accessToken}});
-    return parseResponse(r);
+    auto url = baseUrl + "space/" + id + "/folder";
+    Response r = Get(Url{url}, Header{{"authorization", accessToken}});
+    return parseResponse(r, url);
   } catch (RequestException &e) {
     e.printError();
     throw e;
@@ -97,8 +100,9 @@ nlohmann::json clickup::GetFolders(const string &id) {
 
 nlohmann::json clickup::GetListCustomFields(const string &listId) {
   try {
-    Response r = Get(Url{baseUrl + "list/" + listId + "/field"}, Header{{"authorization", accessToken}});
-    return parseResponse(r);
+    auto url = baseUrl + "list/" + listId + "/field";
+    Response r = Get(Url{url}, Header{{"authorization", accessToken}});
+    return parseResponse(r, url);
 
   } catch (RequestException &e) {
     e.printError();
@@ -111,8 +115,9 @@ nlohmann::json clickup::GetListCustomFields(const string &listId) {
 
 nlohmann::json clickup::GetTaskById(const string &taskId) {
   try {
-    Response r = Get(Url{baseUrl + "task/" + taskId}, Header{{"authorization", accessToken}});
-    return parseResponse(r);
+    auto url = baseUrl + "task/" + taskId;
+    Response r = Get(Url{url}, Header{{"authorization", accessToken}});
+    return parseResponse(r, url);
   } catch (RequestException &e) {
     e.printError();
     throw e;
@@ -124,35 +129,37 @@ nlohmann::json clickup::GetTaskById(const string &taskId) {
 
 nlohmann::json clickup::GetTasksByListId(const string &id, GetTasksByListIdOptions paramsGetTasksByListId) {
   try {
-    string requestResource = "list/{paramsGetTasksByListId.ListId}/task";
+
+    ostringstream requestResource;
+    requestResource << baseUrl << "list/"+id+"/task";
+
+//    string requestResource = "list/"+id+"/task";
     bool addedParams = false;
     if (paramsGetTasksByListId.Archived) {
-      if (!addedParams) {
-        requestResource += "?";
-        addedParams = true;
-      }
-      requestResource += "archived={paramsGetTasksByListId.Archived}";
+      addedParams = true;
+      requestResource << "?archived=" << boolalpha <<  paramsGetTasksByListId.Archived;
     }
-    if (paramsGetTasksByListId.Page > 0) {
+    if (paramsGetTasksByListId.Page > -1) {
       if (!addedParams) {
-        requestResource += "?";
+        requestResource << "?";
         addedParams = true;
       } else {
-        requestResource += "&";
+        requestResource << "&";
       }
-      requestResource += "page={paramsGetTasksByListId.Page}";
+      requestResource << "page=" << paramsGetTasksByListId.Page;
     }
     if (paramsGetTasksByListId.IncludeClosed) {
       if (!addedParams) {
-        requestResource += "?";
+        requestResource << "?";
       } else {
-        requestResource += "&";
+        requestResource << "&";
       }
-      requestResource += "include_closed={paramsGetTasksByListId.IncludeClosed}";
-    }
+      requestResource << "include_closed="<< boolalpha << paramsGetTasksByListId.IncludeClosed;
 
-    Response r = Get(Url{baseUrl + requestResource}, Header{{"authorization", accessToken}});
-    return parseResponse(r);
+    }
+    auto url = requestResource.str();
+    Response r = Get(Url{url}, Header{{"authorization", accessToken}});
+    return parseResponse(r, url);
   } catch (RequestException &e) {
     e.printError();
     throw e;
@@ -164,10 +171,11 @@ nlohmann::json clickup::GetTasksByListId(const string &id, GetTasksByListIdOptio
 
 nlohmann::json clickup::CreateTaskInList(const string &id, nlohmann::json body) {
   try {
+    auto url = baseUrl + "list/" + id + "/task";
     Response r =
-        Post(Url{baseUrl + "list/" + id + "/task"},
+        Post(Url{},
              Header{{"authorization", accessToken}, {"Content-Type", "application/json"}}, Body{to_string(body)});
-    return parseResponse(r);
+    return parseResponse(r, url);
   } catch (RequestException &e) {
     e.printError();
     throw e;
@@ -179,8 +187,9 @@ nlohmann::json clickup::CreateTaskInList(const string &id, nlohmann::json body) 
 
 nlohmann::json clickup::AddTaskToList(const string &listId, const string &taskId) {
   try {
-    Response r = Post(Url{baseUrl + "list/" + listId + "/task/" + taskId}, Header{{"authorization", accessToken}});
-    return parseResponse(r);
+    auto url = baseUrl + "list/" + listId + "/task/" + taskId;
+    Response r = Post(Url{url}, Header{{"authorization", accessToken}});
+    return parseResponse(r, url);
   } catch (RequestException &e) {
     e.printError();
     throw e;
