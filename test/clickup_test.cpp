@@ -5,6 +5,7 @@
 #include <catch2/catch.hpp>
 #include <iostream>
 #include <map>
+#include <future>
 
 using namespace std;
 
@@ -33,6 +34,14 @@ TEST_CASE_METHOD(ClickUpFixture, "test getting a folderless list", "[clickup.cpp
 {
     auto o = clickup.GetFolderlessList("54005663");
     cout << o << endl;
+}
+
+TEST_CASE_METHOD(ClickUpFixture, "async test getting a folderless list", "[clickup.cpp]")
+{
+  auto o = std::async( [&]() {
+    return clickup.GetFolderlessList("54005663");
+  });
+  cout << o.get() << endl;
 }
 
 TEST_CASE_METHOD(ClickUpFixture, "test getting folders", "[clickup.cpp]")

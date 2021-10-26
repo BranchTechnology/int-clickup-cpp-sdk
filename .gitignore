@@ -35,8 +35,11 @@
 **/idea
 
 #Build folders
-**/cmake-build-debug
+**/*/cmake-build-debug/
+**/*/cmake-build-default/
 */build
 .envrc
 
 .idea/
+/cmake-build-default/
+/cmake-build-debug/
