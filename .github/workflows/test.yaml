@@ -1,0 +1,45 @@
+# builds a docker image and pushes it to our registry
+name: cloud
+on:
+  push:
+
+defaults:
+  run:
+    working-directory: .
+jobs:
+  Test:
+    name: Test
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          lfs: 'true'
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Install
+        run: make build
+
+      - name: Test
+        run: make run-build-test
+
+      - name: Teardown
+        if: always()
+        run: make down
+
+#      - name: Build, tag, and push image to Amazon ECR
+##        if: github.event.pull_request.merged == true
+#        run: |
+#          make retag ECR=false TAG=${{ env.TAG }}
+#          make retag ECR=false TAG=${{ env.TAG }} TARGET_TAG="latest"
+#          make push-all

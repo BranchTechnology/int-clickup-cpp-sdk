@@ -1,14 +1,14 @@
 build:
 	docker build . -t clickup:base --target base
 
-build-test: ## this will build a dev version of the shelf container
+test:
+	docker build . -t clickup:test --target test
+
+run-test: ## this will build a dev version of the shelf container
 	docker run -it --network="host" clickup:test
 
 run-build-test: ## runs the test exe inside of the container
 	docker run -it --network="host" clickup:base sh -c /dir/build/test/clickup_test
-	
-run-test: ## runs the test exe inside of the container
-	docker run -it --entrypoint test clickup:test
 
 run-bash: ## this will bash into the container after compilation to allow debugging
 	docker run -it --network="host" --entrypoint bash clickup:base
