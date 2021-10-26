@@ -6,6 +6,7 @@
 #define CLICKUP_SRC_CLICKUP_CLICKUP_H_
 
 #include <nlohmann/json.hpp>
+#include <future>
 #include <string>
 #include "params.h"
 
@@ -19,6 +20,7 @@ public:
     explicit clickup(const std::string &userToken);
     void getToken(const std::string &userToken = "ACCESS_TOKEN");
     nlohmann::json GetFolderlessList(const std::string &id);
+    std::future<nlohmann::json> AsyncGetFolderlessList(const std::string &id);
     nlohmann::json GetFolders(const std::string &id);
     nlohmann::json GetTasksByListId(const std::string &id,
                                     GetTasksByListIdOptions paramsGetTasksByListId = GetTasksByListIdOptions());
