@@ -134,6 +134,27 @@ nlohmann::json clickup::GetTaskById(const string &taskId)
     }
 }
 
+bool clickup::SetTaskStatus(const std::string &taskId, const std::string& newStatus)
+{
+    try {
+        std::string body = "{ \"status\": \"" + newStatus + "\" }";
+        //auto url = baseUrl + "task/" + taskId + "/?custom_task_ids=&team_id=";
+        auto url = baseUrl + "task/" + taskId;
+        Response r = Put(Url{ url }, Header{ {"authorization", accessToken},
+            {"Content-Type", "application/json"} }, Body{ body });
+        return true;
+    }
+    catch (RequestException &e) {
+        e.printError();
+        throw e;
+    }
+    catch (std::exception &e) {
+        cout << "unknown exception: " << e.what() << endl;
+        throw e;
+    }
+    return false;
+}
+
 nlohmann::json clickup::GetTasksByListId(const string &id, GetTasksByListIdOptions paramsGetTasksByListId)
 {
     try {

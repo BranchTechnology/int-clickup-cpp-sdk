@@ -30,6 +30,7 @@ public:
         const std::string& newValue, const bool valueIsNumber);
     nlohmann::json GetListCustomFields(const string &listId);
     nlohmann::json GetTaskById(const string &taskId);
+    bool SetTaskStatus(const std::string &taskId, const std::string& newStatus);
 };
 
 #endif  // CLICKUP_SRC_CLICKUP_CLICKUP_H_
