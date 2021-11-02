@@ -38,6 +38,7 @@ void clickup::getToken(const std::string &userToken)
 {
     try {
         auto val = std::getenv(userToken.c_str());
+        //pk_12673453_G82O4PHT217H76NK1ZCIHZNMP3KKB6DR
         if (val == nullptr) {
             throw logic_error("failed to get ACCESS_TOKEN from env");
         } else {
@@ -203,4 +204,30 @@ nlohmann::json clickup::AddTaskToList(const string &listId, const string &taskId
         cout << "unknown exception: " << e.what() << endl;
         throw e;
     }
+}
+
+bool clickup::SetTaskCustomField(const std::string &taskId, const std::string &fieldId,
+    const std::string& newValue, const bool valueIsNumber)
+{
+    // POST /api/v2/task/{{task_id}}/field/{{field_id}}
+    try {
+        std::string body;
+        if (valueIsNumber) {
+            body = "{ \"value\": " + newValue + " }";
+        }
+        else {
+            body = "{ \"value\": \"" + newValue + "\" }";
+        }
+        auto url = baseUrl + "task/" + taskId + "/field/" + fieldId;
+        Response r = Post(Url{url}, Header{{"authorization", accessToken}, 
+            {"Content-Type", "application/json"}}, Body{body});
+        return true;
+    } catch (RequestException &e) {
+        e.printError();
+        throw e;
+    } catch (std::exception &e) {
+        cout << "unknown exception: " << e.what() << endl;
+        throw e;
+    }
+    return false;
 }

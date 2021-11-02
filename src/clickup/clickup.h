@@ -26,6 +26,8 @@ public:
                                     GetTasksByListIdOptions paramsGetTasksByListId = GetTasksByListIdOptions());
     nlohmann::json CreateTaskInList(const std::string &id, nlohmann::json body);
     nlohmann::json AddTaskToList(const string &listId, const string &taskId);
+    bool SetTaskCustomField(const std::string &taskId, const std::string &fieldId,
+        const std::string& newValue, const bool valueIsNumber);
     nlohmann::json GetListCustomFields(const string &listId);
     nlohmann::json GetTaskById(const string &taskId);
 };
