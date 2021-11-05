@@ -88,6 +88,7 @@ future<nlohmann::json> clickup::AsyncGetFolderlessList(const string &id)
         throw e;
     }
 }
+
 nlohmann::json clickup::GetFolders(const string &id)
 {
     try {
@@ -98,6 +99,22 @@ nlohmann::json clickup::GetFolders(const string &id)
         e.printError();
         throw e;
     } catch (std::exception &e) {
+        cout << "unknown exception: " << e.what() << endl;
+        throw e;
+    }
+}
+
+future<nlohmann::json> clickup::AsyncGetFolders(const string &id)
+{
+    try {
+        return std::async([&]() { return this->GetFolders(id); });
+
+    }
+    catch (RequestException &e) {
+        e.printError();
+        throw e;
+    }
+    catch (std::exception &e) {
         cout << "unknown exception: " << e.what() << endl;
         throw e;
     }
@@ -191,6 +208,22 @@ nlohmann::json clickup::GetTasksByListId(const string &id, GetTasksByListIdOptio
         e.printError();
         throw e;
     } catch (std::exception &e) {
+        cout << "unknown exception: " << e.what() << endl;
+        throw e;
+    }
+}
+
+std::future<nlohmann::json> clickup::AsyncGetTasksByListId(const std::string &id,
+    GetTasksByListIdOptions paramsGetTasksByListId)
+{
+    try {
+        return std::async([&]() { return this->GetTasksByListId(id, paramsGetTasksByListId); });
+    }
+    catch (RequestException &e) {
+        e.printError();
+        throw e;
+    }
+    catch (std::exception &e) {
         cout << "unknown exception: " << e.what() << endl;
         throw e;
     }

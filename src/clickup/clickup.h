@@ -22,8 +22,11 @@ public:
     nlohmann::json GetFolderlessList(const std::string &id);
     std::future<nlohmann::json> AsyncGetFolderlessList(const std::string &id);
     nlohmann::json GetFolders(const std::string &id);
+    std::future<nlohmann::json> AsyncGetFolders(const std::string &id);
     nlohmann::json GetTasksByListId(const std::string &id,
                                     GetTasksByListIdOptions paramsGetTasksByListId = GetTasksByListIdOptions());
+    std::future<nlohmann::json> AsyncGetTasksByListId(const std::string &id,
+        GetTasksByListIdOptions paramsGetTasksByListId = GetTasksByListIdOptions());
     nlohmann::json CreateTaskInList(const std::string &id, nlohmann::json body);
     nlohmann::json AddTaskToList(const string &listId, const string &taskId);
     bool SetTaskCustomField(const std::string &taskId, const std::string &fieldId,
